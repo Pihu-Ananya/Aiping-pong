@@ -1,4 +1,5 @@
-
+rightwristX=""
+rightwristY=""
 /*created by prashant shukla */
 
 var paddle2 =10,paddle1=10;
@@ -22,15 +23,37 @@ var ball = {
 }
 
 function setup(){
-  var canvas =  createCanvas(700,600);
+canvas =  createCanvas(700,600);
+canvas.parent("canvas");
+video=createCapture(VIDEO)
+video.size(700,600)
+video.hide()
+poseNet=ml5.poseNet(video,modelloaded)
+poseNet.on("pose",gotposes)
 }
+
+function modelloaded() {
+  console.log("model is loaded")
+}
+function gotposes(results){
+if(results.length>0) {
+  console.log(results)
+  rightwristX=results[0].pose.rightWrist.x
+  rightwristY=results[0].pose.rightWrist.y
+  console.log(rightwristX,rightwristY)
+}
+}
+
 
 
 function draw(){
 
  background(0); 
-
- fill("black");
+image(video,0,0,700,600)
+fill("red")
+stroke("white")
+circle(rightwristX , rightwristY , 30)
+ fill("black")
  stroke("black");
  rect(680,0,20,700);
 
